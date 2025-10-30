@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Placar ao Vivo</title>
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background: #111; /* fundo escuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.placar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, #ff7f00, #ffb84d);
+    border-radius: 10px;
+    padding: 10px 30px;
+    color: white;
+    font-weight: bold;
+    font-size: 36px;
+    min-width: 600px;
+}
+
+.team {
+    flex: 1;
+    text-align: center;
+}
+
+.score {
+    min-width: 120px; /* largura mínima */
+    padding: 0 10px;  /* espaço interno */
+    text-align: center;
+    font-size: 48px;
+}
+
+#time {
+    margin-top: 20px;
+    font-size: 24px;
+}
+</style>
+</head>
+<body>
+<div>
+    <div class="placar-container">
+        <div class="team" id="teamA">Campinho</div>
+        <div class="score" id="score">0 : 0</div>
+        <div class="team" id="teamB">Gafanha</div>
+    </div>
+    <div id="time">Tempo: 1º Q</div>
+</div>
+
+<script>
+const sheetUrl = "https://docs.google.com/spreadsheets/d/1OTK6hIitpC39dcjpUvcqJU7ZWcvPg5GNgT--tY3Nyxg/export?format=csv&gid=0";
+
+async function atualizar() {
+    const res = await fetch(sheetUrl + '&t=' + Date.now());
+    const text = await res.text();
+    const linhas = text.trim().split('\n');
+    const valores = linhas[1].split(/[,;]+/);
+
+    document.getElementById("teamA").innerText = "Campinho";
+    document.getElementById("teamB").innerText = "Lakers";
+    document.getElementById("score").innerText = (valores[0] || 0) + " : " + (valores[1] || 0);
+    document.getElementById("time").innerText = "Tempo: " + (valores[2] || '--');
+}
+
+atualizar();
+setInterval(atualizar, 5000);
+</script>
+</body>
+</html>
